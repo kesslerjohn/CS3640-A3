@@ -14,6 +14,11 @@ Functions to implement:
     + `Description to be added`.
     + Resources:
         - [introduction to socket programming](https://realpython.com/python-sockets/#background)
+            * It may be worth the time to look through this tutorial and perhaps
+            implement a chunk of it as practice. It seems to provide a means
+            of gaining some experience in terms of working with the objects
+            required for this assignment.
+            * [Berkley sockets | Wikipedia](https://en.wikipedia.org/wiki/Berkeley_sockets#bind)
         - [socket API (creating sockets)](https://docs.python.org/3/library/socket.html#creating-sockets)
         - [setting socket options](https://www.ibm.com/docs/en/i/7.2?topic=ssw_ibm_i_72/apis/ssocko.htm)
 * send_icmp_echo(socket,payload,id,seq,destination):
