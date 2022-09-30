@@ -37,3 +37,12 @@ Extraneous Notes:
 Be sure to be thorough in git usage; adhere to quality standards in terms of
 commit messages. If peer/pair programming, be sure to note who co-authored the
 changes.
+
+A sandbox folder has been created to house various tutorial and experimental
+implementations. Currently a file named echo_server.py exists which is an
+implementation of the echo_server function from the python socket tutorial.
+It's worth taking a look at as some details and quirks are elaborated upon
+within its code comments. To run and test the program, run echo_server.py
+with Python, and run curl to connect to the localhost.
+  i.e., `python3 echo_server.py; curl localhost:port` where the port is
+  whatever is declared in the file.
