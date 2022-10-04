@@ -28,6 +28,7 @@ block in question, where s is the name of the instantiated socket.'''
 #Same function without the context manager syntactic abstraction:
 def echo_server(host,port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    response = None
     try:
         s.bind((host,port))
         s.listen()
@@ -38,13 +39,18 @@ def echo_server(host,port):
                 data = conn.recv(1024)
                 if not data:
                     break
-                conn.sendall(data)
+                else:
+                    response = data.decode()
+                    response = "Data received: " + response
+                    conn.sendall(response.encode())
+                #conn.sendall(data)
     except OSError as msg:
-        print(msg)
+        response = msg
         s.close() #may be redundant; "finally" may run regardless of exception.
     finally:
         s.close()
         s = None
+    return response
 
 '''The above implementation is equivalent to the first. Some research needs to
 be put into what happens with the conn object created in the tuple of the
@@ -61,4 +67,9 @@ of the block will expediate this process.'''
 #Could also be shortcutted with a call to some function that simply closes
 #the relevant socket.
 
-echo_server(HOST,PORT)
+def close_server():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    return s.close()
+
+close_server()
+print(echo_server(HOST,PORT))
