@@ -15,6 +15,7 @@ def main():
         except ValueError:
             print("Error: some parameters missing.") #todo add a while loop to ping forever if
                                                      #no value is given for n_hops. - John
-
+            return 1
+    return 0
 if __name__ == "__main__":
     main()

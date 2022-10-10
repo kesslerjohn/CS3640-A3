@@ -31,6 +31,8 @@ def main():
             print("Number of pings: {}\n".format(num))
         except ValueError:
             print("Error: some parameters missing.")
+            return 1
+    return 0
 
 
 if __name__ == "__main__":

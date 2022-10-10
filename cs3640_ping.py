@@ -38,13 +38,14 @@ def main():
         except ValueError:
             print("Error: some parameters missing.") #todo add a while loop to ping forever if
                                                      #no value is given for n_hops. - John
-
+            return 1
     id = 0x81
     seq = 0x7E 
     timeout = ttl*1000 #Is this right? - John
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
         send_icmp_echo(skt, "Hello world", id, seq, dst)
+    return 0
 
 if __name__ == "__main__":
     main()
