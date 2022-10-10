@@ -18,4 +18,4 @@ def send_icmp_echo(socket, payload, id, seq, destination):
     echo.id = id
     echo.seq = seq
     echo.data = payload
-    socket.send()
+    socket.sendto(str.encode(payload), destination)
