@@ -29,8 +29,8 @@ leveraged within a file labeled "**cs3640-ping.py**"
             required for this assignment.
             * [Berkley sockets | Wikipedia](https://en.wikipedia.org/wiki/Berkeley_sockets#bind)
         - [socket API (creating sockets)](https://docs.python.org/3/library/socket.html#creating-sockets)
-        - [setting socket options](https://www.ibm.com/docs/en/i/7.2?topic=ssw_ibm_i_72/apis/ssocko.htm)
-        - [socket types incl SOCK_RAW] (https://www.ibm.com/docs/en/aix/7.1?topic=protocols-socket-types)
+        - [setting socket options](https://www.ibm.com/docs/en/i/7.2?topic=ssw_ibm_i_72/apis/ssocko.htm) 
+        - [`socket types`] (https://www.ibm.com/docs/en/aix/7.1?topic=protocols-socket-types)
 * `send_icmp_echo(socket,payload,id,seq,destination)`:
     + A method which leverages the **dpkt** module to craft and send an ICMP
     echo packet. The packet should have it's `payload`, `id`, and `seq` set to
