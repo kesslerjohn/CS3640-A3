@@ -1,21 +1,16 @@
 import socket
 import dpkt
 
-'''
-pseudocode for sending icmp echo
-
-def send_icmp_echo(socket, payload, id, seq, destination):
+def send_icmp_echo(sock, payload, id, seq, destination):
     echo = dpkt.icmp.ICMP.Echo()
     echo.id = id
     echo.seq = seq
     echo.data = payload
-    socket.send
 
-'''
+    icmp = dpkt.icmp.ICMP()
+    icmp.type = dpkt.icmp.ICMP_ECHO
+    icmp.data = echo
 
-def send_icmp_echo(socket, payload, id, seq, destination):
-    echo = dpkt.icmp.ICMP.Echo()
-    echo.id = id
-    echo.seq = seq
-    echo.data = payload
-    socket.sendto(str.encode(payload), destination)
+    #sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, dpkt.ip.IP_PROTO_ICMP)
+    sock.connect(destination, 1)
+    sent = sock.send(str(icmp))
