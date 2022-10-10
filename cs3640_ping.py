@@ -26,19 +26,25 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     sent = sock.send(str(icmp))
 
 def main():
-    n = len(sys.argv)
-    if (n <= 1):
-        print("")
-    destination = n[2]
-    payload = n[3]
-    ttl = n[4] #todo check the indices of these command line args - John
-    
+    args = sys.argv
+    if (len(args) < 2):
+        print("No command line arguments given")
+        return 1
+    else:
+        try:
+            dst = args[args.index("-destination")+1]
+            ttl = args[args.index("-ttl")+1]
+            num = args[args.index("-n")+1]
+        except ValueError:
+            print("Error: some parameters missing.") #todo add a while loop to ping forever if
+                                                     #no value is given for n_hops. - John
 
     id = 0x81
-    seq = 0x7E
+    seq = 0x7E 
     timeout = ttl*1000 #Is this right? - John
-    skt = make_icmp_socket(ttl, timeout)
-    send_icmp_echo(skt, payload, id, seq, destination)
+    for i in range(num):
+        skt = make_icmp_socket(ttl, timeout)
+        send_icmp_echo(skt, "Hello world", id, seq, dst)
 
 if __name__ == "__main__":
     main()
