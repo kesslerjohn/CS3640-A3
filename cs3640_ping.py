@@ -39,3 +39,5 @@ def main():
     skt = make_icmp_socket(ttl, timeout)
     send_icmp_echo(skt, payload, id, seq, destination)
 
+if __name__ == "__main__":
+    main()
