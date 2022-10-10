@@ -1,6 +1,12 @@
 import socket
 import dpkt
 
+def make_icmp_socket(ttl, timeout):
+    s1 = socket.AF_INET
+    s2 = socket.SOCK_RAW
+    s3 = dpkt.ip.IP_PROMO_ICMP
+    sock = socket.socket(s1, s2, s3)
+
 def send_icmp_echo(sock, payload, id, seq, destination):
     echo = dpkt.icmp.ICMP.Echo()
     echo.id = id
