@@ -8,7 +8,7 @@ def make_icmp_socket(ttl, timeout):
     s2 = socket.SOCK_RAW
     s3 = dpkt.ip.IP_PROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here?
     sock = socket.socket(s1, s2, s3)
-    #sock.setsockopt(socket.IP_TTL, ttl)
+    #sock.setsockopt(socket.IP_TTL, ttl) # !! This method needs three arguments.
     return sock
 
 def send_icmp_echo(sock, payload, id, seq, destination):
@@ -39,8 +39,10 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; default is ICMP_ECHO!
     icmp.data = echo
 
-    sock.connect((destination, 1))
-    sent = sock.send(str.encode(str(icmp)))
+    sock.connect((destination, 1)) #comment this line...
+    sent = sock.send(str.encode(str(icmp))) #... and this line...
+    #sent = sock.sendto(str.encode(str(icmp)),(destination,port)) # ... and uncomment this...
+    # ... To allow a means to define a port.
     return sent
 
 def recv_icmp_response(buffer_size = 1024):
@@ -49,6 +51,22 @@ def recv_icmp_response(buffer_size = 1024):
     socket_protocol = socket.IPPROTO_ICMP
     s = socket.socket(socket_family,socket_type,socket_protocol)
     return s.recvfrom(buffer_size)
+
+#!!! Currently, if we use two different terminals, we can run the following:
+'''
+    Terminal 1:
+        sudo python3
+        from cs3640_ping import *
+        recv_icmp_response()
+
+    Terminal 2:
+        sudo python3
+        from cs3640_ping import *
+        skt = make_icmp_socket(1,1) # These int(1) values are arbitrary
+        send_icmp_echo(skt,'hello world', 0x81,0x7E,'127.0.0.1')
+
+Upon sending the echo, the server will acknowledge and print the packet. As well the client.
+'''
 
 def main():
     args = sys.argv
@@ -69,8 +87,8 @@ def main():
     timeout = ttl*1000 #Is this right? - John
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
-        dst = recv_icmp_response()
         send_icmp_echo(skt, "Hello world", id, seq, dst)
+        #Unsure how to set up the test environment here without bringing in threading.
     return 0
 
 if __name__ == "__main__":
