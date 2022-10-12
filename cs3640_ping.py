@@ -8,13 +8,18 @@ def make_icmp_socket(ttl, timeout):
     s2 = socket.SOCK_RAW
     s3 = dpkt.ip.IP_PROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here?
     sock = socket.socket(s1, s2, s3)
-    sock.setsockopt(socket.IP_TTL, ttl)
+    #sock.setsockopt(socket.IP_TTL, ttl)
     return sock
 
 def send_icmp_echo(sock, payload, id, seq, destination):
     echo = dpkt.icmp.ICMP.Echo()
     echo.id = id
     echo.seq = seq
+    if type(payload) == str:
+        payload = str.encode(payload)
+    elif type(payload) != bytes:
+        return False
+
     echo.data = payload
 
     #https://dpkt.readthedocs.io/en/latest/_modules/dpkt/icmp.html
@@ -34,9 +39,9 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; default is ICMP_ECHO!
     icmp.data = echo
 
-    #sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, dpkt.ip.IP_PROTO_ICMP)
-    sock.connect(destination, 1)
-    sent = sock.send(str(icmp))
+    sock.connect((destination, 1))
+    sent = sock.send(str.encode(str(icmp)))
+    return sent
 
 def recv_icmp_response(buffer_size = 1024):
     socket_family = socket.AF_INET
