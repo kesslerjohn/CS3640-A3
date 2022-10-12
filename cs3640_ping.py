@@ -17,8 +17,21 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     echo.seq = seq
     echo.data = payload
 
+    #https://dpkt.readthedocs.io/en/latest/_modules/dpkt/icmp.html
+        #dpkt.icmp.ICMP() default headers are:
+            #('type', 'B', 8),('code', 'B', 0),('sum', 'H', 0), which seem to be able
+            #to be accessed and mutated as if class properties.
+
+        #dpkt.icmp.ICMP.Echo() headers are defaulted to:
+            #('id', 'H', 0), ('seq', 'H', 0)
+
+    # Considering this much, I'm concerned as to where the payload is placed. I'm
+    # also concerned that the payload received in this function, (and the argument given
+    #to sock.send()), are being teated as strings as opposed to bytes.
+    # --- Alan
+
     icmp = dpkt.icmp.ICMP()
-    icmp.type = dpkt.icmp.ICMP_ECHO
+    icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; default is ICMP_ECHO!
     icmp.data = echo
 
     #sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, dpkt.ip.IP_PROTO_ICMP)
