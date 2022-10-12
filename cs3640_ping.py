@@ -1,7 +1,8 @@
 import socket
 import dpkt
 import sys
-
+import _thread
+import threading
 
 def make_icmp_socket(ttl, timeout):
     s1 = socket.AF_INET
@@ -55,7 +56,7 @@ def recv_icmp_response(buffer_size = 1024):
 #!!! Currently, if we use two different terminals, we can run the following:
 '''
     Terminal 1:
-        sudo python3
+        # sudo python3
         from cs3640_ping import *
         recv_icmp_response()
 
@@ -68,7 +69,27 @@ def recv_icmp_response(buffer_size = 1024):
 Upon sending the echo, the server will acknowledge and print the packet. As well the client.
 '''
 
+
+
 def main():
+
+    class serverThread(threading.Thread):
+        def __init__(self, threadID):
+            threading.Thread.__init__(self)
+            self.threadID = threadID
+            self.packet = None
+        def run(self):
+            self.packet = recv_icmp_response()
+
+    class clientThread(threading.Thread):
+        def __init__(self, threadID, sock):
+            threading.Thread.__init__(self)
+            self.threadID = threadID
+            self.packet = None
+            self.socket = sock
+        def run(self):
+            self.packet = send_icmp_echo(self.socket, "Hello world", 0x81, 0x7E, '127.0.0.1')
+
     args = sys.argv
     if (len(args) < 2):
         print("No command line arguments given")
@@ -76,8 +97,8 @@ def main():
     else:
         try:
             dst = args[args.index("-destination")+1]
-            ttl = args[args.index("-ttl")+1]
-            num = args[args.index("-n")+1]
+            ttl = int(args[args.index("-ttl")+1])
+            num = int(args[args.index("-n")+1])
         except ValueError:
             print("Error: some parameters missing.") #todo add a while loop to ping forever if
                                                      #no value is given for n_hops. - John
@@ -87,8 +108,14 @@ def main():
     timeout = ttl*1000 #Is this right? - John
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
-        send_icmp_echo(skt, "Hello world", id, seq, dst)
-        #Unsure how to set up the test environment here without bringing in threading.
+        thread1 = serverThread(1)
+        thread2 = clientThread(2,skt)
+        thread1.start()
+        thread2.start()
+        thread1.join()
+        thread2.join()
+        print(thread1.packet)
+        print(thread2.packet)
     return 0
 
 if __name__ == "__main__":
