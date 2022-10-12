@@ -51,6 +51,7 @@ def main():
     timeout = ttl*1000 #Is this right? - John
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
+        dst = recv_icmp_response()
         send_icmp_echo(skt, "Hello world", id, seq, dst)
     return 0
 
