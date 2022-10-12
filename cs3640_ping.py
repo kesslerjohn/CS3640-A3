@@ -6,7 +6,7 @@ import sys
 def make_icmp_socket(ttl, timeout):
     s1 = socket.AF_INET
     s2 = socket.SOCK_RAW
-    s3 = dpkt.ip.IP_PROTO_ICMP
+    s3 = dpkt.ip.IPPROTO_ICMP
     sock = socket.socket(s1, s2, s3)
     sock.setsockopt(socket.IP_TTL, ttl)
     return sock
@@ -24,6 +24,13 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     #sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, dpkt.ip.IP_PROTO_ICMP)
     sock.connect(destination, 1)
     sent = sock.send(str(icmp))
+
+def recv_icmp_response(buffer_size = 1024):
+    socket_family = socket.AF_INET
+    socket_type = socket.SOCK_RAW #unsure why we are using raw...
+    socket_protocol = socket.IP_PROTO_ICMP
+    s = socket.socket(socket_family,socket_type,socket_protocol)
+    return s.recvfrom(buffer_size)
 
 def main():
     args = sys.argv
