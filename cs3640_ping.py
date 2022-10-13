@@ -78,7 +78,7 @@ def main():
             ttl = int(args[args.index("-ttl")+1])
             num = int(args[args.index("-n")+1])
         except ValueError:
-            print("Error: some parameters missing.")
+            print("Error: some parameters are incorrect or missing.")
             return 1
     id = 0x08
     seq = 0x0
@@ -96,7 +96,6 @@ def main():
         total_time += thread1.duration
         print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {} ms"
             .format(thread1.packet[1][0], i, id, ttl, t))
-        #print(thread1.duration)
     avg_time = round((total_time/num), 3)
     print("Average rtt: " + str(avg_time))
     return 0
