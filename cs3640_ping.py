@@ -8,12 +8,10 @@ import time
 def make_icmp_socket(ttl, timeout):
     s1 = socket.AF_INET
     s2 = socket.SOCK_RAW
-    s3 = socket.IPPROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here? #i'll take that advice and switch it - nalini
+    s3 = socket.IPPROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here? #
     sock = socket.socket(s1, s2, s3)
+    sock.setsockopt(socket.SOL_IP, socket.IP_TTL, ttl)
     #sock.setsockopt(socket.IP_TTL, ttl) # !! This method needs three arguments.
-    #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # how does this sound for three arguments? 
-    #sock.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1) # or this
-    sock.timeout = timeout
     return sock
 
 def send_icmp_echo(sock, payload, id, seq, destination):
@@ -32,7 +30,7 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     icmp.data = echo
 
     sock.connect((destination, 1)) #comment this line...
-    sent = sock.send(str.encode(str(icmp))) #... and this line...
+    sent = sock.send(bytes(icmp)) #... and this line...
     #sent = sock.sendto(str.encode(str(icmp)),(destination,443)) # ... and uncomment this...
     # ... To allow a means to define a port.
     return sent
