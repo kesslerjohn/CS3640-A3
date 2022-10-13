@@ -114,7 +114,7 @@ def main():
     timeout = ttl*3 
     total_time = 0
     scount = 0
-    print("\n")
+    # print("\n")
     for i in range(num):
         try:
             skt = make_icmp_socket(ttl, timeout)
@@ -126,10 +126,10 @@ def main():
             thread2.join()
             t = round(thread1.get_duration(), 1)
             total_time += thread1.get_duration()
-            print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {} ms".format(thread1.get_packet()[1][0], i, id, ttl, t))
+            print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {}   ms".format(thread1.get_packet()[1][0], i, id, ttl, t))
             scount+=1
             time.sleep(1)
-       except:
+        except:
             print("Ping failed: no route to host")
             pass
 
