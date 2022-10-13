@@ -30,7 +30,7 @@ def main():
         addr = recvr[1]
         print("destination = " + dst + "; hop " + str(ttl) + " = " + str(addr) + "; rtt = " + str(RTT) + " ms")
         if (addr == dst):
-            break
+            continue
         else:
             ttl = ttl + 1
 
