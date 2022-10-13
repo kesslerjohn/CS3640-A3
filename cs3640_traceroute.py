@@ -14,8 +14,7 @@ def main():
             dst = args[args.index("-destination")+1]
             num = args[args.index("-n_hops")+1]
         except ValueError:
-            print("Error: some parameters missing.") #todo add a while loop to ping forever if
-                                                     #no value is given for n_hops. - John
+            print("Error: some parameters missing.") 
             return 1
     ttl = 1
 
