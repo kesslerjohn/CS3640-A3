@@ -28,6 +28,7 @@ def main():
         RTT = (endTime - startTime) * 1000
         round(RTT, 4)
         addr = recvr[1]
+        print addr
         print("destination = " + dst + "; hop " + str(ttl) + " = " + str(addr) + "; rtt = " + str(RTT) + " ms")
         if (str(addr) == dst):
             break
