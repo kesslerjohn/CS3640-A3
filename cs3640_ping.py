@@ -52,7 +52,7 @@ def main():
         def run(self):
             start_time = time.time()
             self.packet = recv_icmp_response()
-            self.duration = (end_time = time.time()) * 1000
+            self.duration = (time.time() - start_time) * 1000
 
     class clientThread(threading.Thread):
         def __init__(self, threadID, sock, payload, id, seq, destination):
@@ -92,8 +92,8 @@ def main():
         thread1.join()
         thread2.join()
         #print(thread1.packet)
-        print(thread2.packet)
-        print(thread2.duration)
+        print(thread1.packet)
+        print(thread1.duration)
     return 0
 
 if __name__ == "__main__":
