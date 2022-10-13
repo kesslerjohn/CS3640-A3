@@ -29,7 +29,7 @@ def main():
         round(RTT, 4)
         addr = recvr[1]
         print("destination = " + dst + "; hop " + str(ttl) + " = " + str(addr) + "; rtt = " + str(RTT) + " ms")
-        if (addr == dst):
+        if (str(addr) == dst):
             continue
         else:
             ttl = ttl + 1
