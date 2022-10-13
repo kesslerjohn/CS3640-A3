@@ -1,5 +1,4 @@
-All 4 of us met up in person to discuss any questions/concerns in regards to the assignment, and help each other out if stuck on any part of the assignment. 
-(idk someone can fix or add on to that statement above)
+Workflow: We met in person to discuss what we learned, work through difficulties, and test functionality of code. Work and reading was undertaken both as a group and individually, according to each member's availability and time constraints. 
 
 Michael Scudiero:
   Focused on traceroute.py; did interior logic and debugging for that file.
