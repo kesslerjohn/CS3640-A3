@@ -1,3 +1,4 @@
+from os import wait
 import socket
 import dpkt
 import sys
@@ -112,20 +113,29 @@ def main():
     seq = 0x0
     timeout = ttl*3 
     total_time = 0
+    scount = 0
+    print("\n")
     for i in range(num):
-        skt = make_icmp_socket(ttl, timeout)
-        thread1 = serverThread(1)
-        thread2 = clientThread(2,skt,'Hello world', id, i, dst)
-        thread1.start()
-        thread2.start()
-        thread1.join()
-        thread2.join()
-        t = round(thread1.get_duration(), 1)
-        total_time += thread1.get_duration()
-        print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {} ms"
-            .format(thread1.get_packet()[1][0], i, id, ttl, t))
+        try:
+            skt = make_icmp_socket(ttl, timeout)
+            thread1 = serverThread(1)
+            thread2 = clientThread(2,skt,'Hello world', id, i, dst)
+            thread1.start()
+            thread2.start()
+            thread1.join()
+            thread2.join()
+            t = round(thread1.get_duration(), 1)
+            total_time += thread1.get_duration()
+            print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {} ms".format(thread1.get_packet()[1][0], i, id, ttl, t))
+            scount+=1
+            time.sleep(1)
+       except:
+            print("Ping failed: no route to host")
+            pass
+
+        
     avg_time = round((total_time/num), 3)
-    print("Average rtt: " + str(avg_time))
+    print("Average rtt: {}, {}/{} successful pings".format(str(avg_time), scount, num))
     return 0
 
 if __name__ == "__main__":
