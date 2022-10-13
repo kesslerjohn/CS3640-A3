@@ -4,15 +4,17 @@ import sys
 import threading
 import time
 
+def make_icmp_socket_helper():
+    socket_family = socket.AF_INET
+    socket_type = socket.SOCK_RAW
+    socket_protocol = socket.IPPROTO_ICMP
+    return socket.socket(socket_family, socket_type, socket_protocol)
+
 def make_icmp_socket(ttl, timeout):
-    s1 = socket.AF_INET
-    s2 = socket.SOCK_RAW
-    s3 = socket.IPPROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here? #
-    sock = socket.socket(s1, s2, s3)
-    sock.setsockopt(socket.SOL_IP, socket.IP_TTL, ttl)
-    #sock.setsockopt(socket.IP_TTL, ttl) # !! This method needs three arguments.
-    sock.settimeout(timeout)
-    return sock
+    s = make_icmp_socket_helper()
+    s.setsockopt(socket.SOL_IP, socket.IP_TTL, ttl)
+    s.settimeout(timeout)
+    return s
 
 def send_icmp_echo(sock, payload, id, seq, destination):
     echo = dpkt.icmp.ICMP.Echo()
@@ -36,10 +38,7 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     return sent
 
 def recv_icmp_response(buffer_size = 1024):
-    socket_family = socket.AF_INET
-    socket_type = socket.SOCK_RAW
-    socket_protocol = socket.IPPROTO_ICMP
-    s = socket.socket(socket_family,socket_type,socket_protocol)
+    s = make_icmp_socket_helper()
     return s.recvfrom(buffer_size)
 
 
