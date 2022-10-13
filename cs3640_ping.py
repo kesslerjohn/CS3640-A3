@@ -17,9 +17,12 @@ def make_icmp_socket(ttl, timeout):
     return s
 
 def send_icmp_echo(sock, payload, id, seq, destination):
+    #ICMP.Echo() extends the dpkt.icmp class by adding more header information:
     echo = dpkt.icmp.ICMP.Echo()
+    #   New header content: (('id', 'H', 0), ('seq', 'H', 0))
     echo.id = id
     echo.seq = seq
+
     if type(payload) == str:
         payload = str.encode(payload)
     elif type(payload) != bytes:
@@ -29,12 +32,20 @@ def send_icmp_echo(sock, payload, id, seq, destination):
             raise ValueError("Incorrect payload datatype within \
                             send_icmp_echo() call")
 
+    #It seems that the data attribute of this object is inherently an empty...
+    #...bit string. Overwrite it with a new bit string:
     echo.data = payload
 
+    #Create non-echo headers:
     icmp = dpkt.icmp.ICMP()
-    icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; default is ICMP_ECHO!
+    #   New header content: ('type', 'B', 8),('code', 'B', 0),('sum', 'H', 0)
+    icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; defaulted
+
+    #Once again, it seems that the data attribute here behaves as Echo()'s:
     icmp.data = echo
 
+    #Connect the socket and send the packet. Following comments indicate how
+    #...To extend this to allow port parameterization.
     sock.connect((destination, 1)) #comment this line...
     sent = sock.send(bytes(icmp)) #... and this line...
     #sent = sock.sendto(str.encode(str(icmp)),(destination,443)) # ... and uncomment this...
