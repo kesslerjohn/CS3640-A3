@@ -40,9 +40,9 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; default is ICMP_ECHO!
     icmp.data = echo
 
-    sock.connect((destination, 1)) #comment this line...
-    sent = sock.send(str.encode(str(icmp))) #... and this line...
-    #sent = sock.sendto(str.encode(str(icmp)),(destination,port)) # ... and uncomment this...
+    #sock.connect((destination, 1)) #comment this line...
+    #sent = sock.send(str.encode(str(icmp))) #... and this line...
+    sent = sock.sendto(str.encode(str(icmp)),(destination,443)) # ... and uncomment this...
     # ... To allow a means to define a port.
     return sent
 
@@ -51,7 +51,7 @@ def recv_icmp_response(buffer_size = 1024):
     socket_type = socket.SOCK_RAW #unsure why we are using raw...
     socket_protocol = socket.IPPROTO_ICMP
     s = socket.socket(socket_family,socket_type,socket_protocol)
-    return s.recvfrom(buffer_size)
+    return s.recv(buffer_size)
 
 #!!! Currently, if we use two different terminals, we can run the following:
 '''
@@ -82,13 +82,17 @@ def main():
             self.packet = recv_icmp_response()
 
     class clientThread(threading.Thread):
-        def __init__(self, threadID, sock):
+        def __init__(self, threadID, sock, payload, id, seq, destination):
             threading.Thread.__init__(self)
             self.threadID = threadID
             self.packet = None
             self.socket = sock
+            self.payload = payload
+            self.id = id
+            self.seq = seq
+            self.destination = destination
         def run(self):
-            self.packet = send_icmp_echo(self.socket, "Hello world", 0x81, 0x7E, '127.0.0.1')
+            self.packet = send_icmp_echo(self.socket, self.payload , self.id, self.seq, self.destination)
 
     args = sys.argv
     if (len(args) < 2):
@@ -109,7 +113,7 @@ def main():
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
         thread1 = serverThread(1)
-        thread2 = clientThread(2,skt)
+        thread2 = clientThread(2,skt,'Hello world', id, seq, dst)
         thread1.start()
         thread2.start()
         thread1.join()
