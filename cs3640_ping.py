@@ -23,7 +23,11 @@ def send_icmp_echo(sock, payload, id, seq, destination):
     if type(payload) == str:
         payload = str.encode(payload)
     elif type(payload) != bytes:
-        return False
+        try:
+            payload = str.encode(str(payload))
+        except:
+            raise ValueError("Incorrect payload datatype within \
+                            send_icmp_echo() call")
 
     echo.data = payload
 
