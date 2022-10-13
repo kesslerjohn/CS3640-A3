@@ -78,8 +78,7 @@ def main():
             ttl = int(args[args.index("-ttl")+1])
             num = int(args[args.index("-n")+1])
         except ValueError:
-            print("Error: some parameters missing.") #todo add a while loop to ping forever if
-                                                     #no value is given for n_hops. - John
+            print("Error: some parameters missing.")
             return 1
     id = 0x08
     seq = 0x0
