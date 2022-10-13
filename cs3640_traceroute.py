@@ -2,6 +2,7 @@ import socket
 import dpkt
 import cs3640_ping
 import sys
+import time
 
 def main():
     args = sys.argv
