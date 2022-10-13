@@ -38,7 +38,7 @@ def recv_icmp_response(buffer_size = 1024):
     socket_type = socket.SOCK_RAW #unsure why we are using raw...
     socket_protocol = socket.IPPROTO_ICMP
     s = socket.socket(socket_family,socket_type,socket_protocol)
-    return s.recv(buffer_size)
+    return s.recvfrom(buffer_size)
 
 
 def main():
