@@ -3,14 +3,15 @@ import dpkt
 import sys
 import _thread
 import threading
+import time
 
 def make_icmp_socket(ttl, timeout):
     s1 = socket.AF_INET
     s2 = socket.SOCK_RAW
-    s3 = dpkt.ip.IP_PROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here?
+    s3 = socket.IPPROTO_ICMP #why isn't socket.IPPROTO_ICMP being used here? #i'll take that advice and switch it - nalini
     sock = socket.socket(s1, s2, s3)
     #sock.setsockopt(socket.IP_TTL, ttl) # !! This method needs three arguments.
-    #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # how does this sound for three arguments?
+    #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # how does this sound for three arguments? 
     sock.timeout()
     return sock
 
