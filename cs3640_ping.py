@@ -1,7 +1,6 @@
 import socket
 import dpkt
 import sys
-import _thread
 import threading
 import time
 
@@ -37,7 +36,7 @@ def send_icmp_echo(sock, payload, id, seq, destination):
 
 def recv_icmp_response(buffer_size = 1024):
     socket_family = socket.AF_INET
-    socket_type = socket.SOCK_RAW #unsure why we are using raw...
+    socket_type = socket.SOCK_RAW
     socket_protocol = socket.IPPROTO_ICMP
     s = socket.socket(socket_family,socket_type,socket_protocol)
     return s.recvfrom(buffer_size)
@@ -49,8 +48,11 @@ def main():
             threading.Thread.__init__(self)
             self.threadID = threadID
             self.packet = None
+            self.duration = None
         def run(self):
+            start_time = time.time()
             self.packet = recv_icmp_response()
+            self.duration = (end_time = time.time()) * 1000
 
     class clientThread(threading.Thread):
         def __init__(self, threadID, sock, payload, id, seq, destination):
@@ -79,7 +81,7 @@ def main():
                                                      #no value is given for n_hops. - John
             return 1
     id = 0x81
-    seq = 0x7E 
+    seq = 0x7E
     timeout = ttl*1000 #Is this right? - John
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
@@ -89,8 +91,9 @@ def main():
         thread2.start()
         thread1.join()
         thread2.join()
-        print(thread1.packet)
+        #print(thread1.packet)
         print(thread2.packet)
+        print(thread2.duration)
     return 0
 
 if __name__ == "__main__":
