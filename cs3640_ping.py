@@ -23,26 +23,13 @@ def send_icmp_echo(sock, payload, id, seq, destination):
 
     echo.data = payload
 
-    #https://dpkt.readthedocs.io/en/latest/_modules/dpkt/icmp.html
-        #dpkt.icmp.ICMP() default headers are:
-            #('type', 'B', 8),('code', 'B', 0),('sum', 'H', 0), which seem to be able
-            #to be accessed and mutated as if class properties.
-
-        #dpkt.icmp.ICMP.Echo() headers are defaulted to:
-            #('id', 'H', 0), ('seq', 'H', 0)
-
-    # Considering this much, I'm concerned as to where the payload is placed. I'm
-    # also concerned that the payload received in this function, (and the argument given
-    #to sock.send()), are being teated as strings as opposed to bytes.
-    # --- Alan
-
     icmp = dpkt.icmp.ICMP()
     icmp.type = dpkt.icmp.ICMP_ECHO #this seems to change nothing; default is ICMP_ECHO!
     icmp.data = echo
 
-    #sock.connect((destination, 1)) #comment this line...
-    #sent = sock.send(str.encode(str(icmp))) #... and this line...
-    sent = sock.sendto(str.encode(str(icmp)),(destination,443)) # ... and uncomment this...
+    sock.connect((destination, 1)) #comment this line...
+    sent = sock.send(str.encode(str(icmp))) #... and this line...
+    #sent = sock.sendto(str.encode(str(icmp)),(destination,443)) # ... and uncomment this...
     # ... To allow a means to define a port.
     return sent
 
@@ -53,26 +40,8 @@ def recv_icmp_response(buffer_size = 1024):
     s = socket.socket(socket_family,socket_type,socket_protocol)
     return s.recv(buffer_size)
 
-#!!! Currently, if we use two different terminals, we can run the following:
-'''
-    Terminal 1:
-        # sudo python3
-        from cs3640_ping import *
-        recv_icmp_response()
-
-    Terminal 2:
-        sudo python3
-        from cs3640_ping import *
-        skt = make_icmp_socket(1,1) # These int(1) values are arbitrary
-        send_icmp_echo(skt,'hello world', 0x81,0x7E,'127.0.0.1')
-
-Upon sending the echo, the server will acknowledge and print the packet. As well the client.
-'''
-
-
 
 def main():
-
     class serverThread(threading.Thread):
         def __init__(self, threadID):
             threading.Thread.__init__(self)
