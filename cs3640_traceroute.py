@@ -22,7 +22,7 @@ def main():
     while (ttl <= int(num)):
         sock = cs3640_ping.make_icmp_socket(ttl, ttl*3)
         startTime = time.time()
-        cs3640_ping.send_icmp_echo(sock, "Hello World", 0x81, 0x7E, dst)
+        cs3640_ping.send_icmp_echo(sock, "Hello World", 0x1E, 0x7E, dst)
         recvr = cs3640_ping.recv_icmp_response()
         endTime = time.time()
         RTT = (endTime - startTime) * 1000

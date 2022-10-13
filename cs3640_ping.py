@@ -81,20 +81,25 @@ def main():
             print("Error: some parameters missing.") #todo add a while loop to ping forever if
                                                      #no value is given for n_hops. - John
             return 1
-    id = 0x81
-    seq = 0x7E
-    timeout = ttl*3 #Is this right? - John
+    id = 0x08
+    seq = 0x0
+    timeout = ttl*3 
+    total_time = 0
     for i in range(num):
         skt = make_icmp_socket(ttl, timeout)
         thread1 = serverThread(1)
-        thread2 = clientThread(2,skt,'Hello world', id, seq, dst)
+        thread2 = clientThread(2,skt,'Hello world', id, i, dst)
         thread1.start()
         thread2.start()
         thread1.join()
         thread2.join()
-        #print(thread1.packet)
-        print(thread1.packet)
-        print(thread1.duration)
+        t = round(thread1.duration, 1)
+        total_time += thread1.duration
+        print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {} ms"
+            .format(thread1.packet[1][0], i, id, ttl, t))
+        #print(thread1.duration)
+    avg_time = round((total_time/num), 3)
+    print("Average rtt: " + str(avg_time))
     return 0
 
 if __name__ == "__main__":
