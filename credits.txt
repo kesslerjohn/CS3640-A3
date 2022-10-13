@@ -1,4 +1,5 @@
-Workflow: We met in person to discuss what we learned, work through difficulties, and test functionality of code. Work and reading was undertaken both as a group and individually, according to each member's availability and time constraints. 
+Workflow: We met in person to discuss what we learned, work through difficulties, and test functionality of code. Work and reading was
+undertaken both as a group and individually, according to each member's availability and time constraints. 
 
 Michael Scudiero:
   Focused on traceroute.py; did interior logic and debugging for that file.
