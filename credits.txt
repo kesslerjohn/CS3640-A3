@@ -15,7 +15,7 @@ Alan McKay:
 
 
 John Kessler:
-
+Did CLI parsing for ping and traceroute, plus output behavior of ping and the frame of send_icmp_echo().
 
 
 
