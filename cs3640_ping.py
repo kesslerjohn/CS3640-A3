@@ -12,7 +12,8 @@ def make_icmp_socket(ttl, timeout):
     sock = socket.socket(s1, s2, s3)
     #sock.setsockopt(socket.IP_TTL, ttl) # !! This method needs three arguments.
     #sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # how does this sound for three arguments? 
-    sock.timeout()
+    #sock.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1) # or this
+    sock.timeout = timeout
     return sock
 
 def send_icmp_echo(sock, payload, id, seq, destination):
