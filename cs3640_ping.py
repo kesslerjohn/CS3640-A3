@@ -58,29 +58,43 @@ def recv_icmp_response(buffer_size = 1024):
 
 
 def main():
+
     class serverThread(threading.Thread):
         def __init__(self, threadID):
             threading.Thread.__init__(self)
             self.threadID = threadID
             self.packet = None
             self.duration = None
+
         def run(self):
             start_time = time.time()
             self.packet = recv_icmp_response()
             self.duration = (time.time() - start_time) * 1000
 
+        def get_duration(self):
+            return self.duration
+
+        def set_duration(self,value):
+            self.duration = value
+
+        def get_packet(self):
+            return self.packet
+
+
     class clientThread(threading.Thread):
         def __init__(self, threadID, sock, payload, id, seq, destination):
             threading.Thread.__init__(self)
             self.threadID = threadID
-            self.packet = None
             self.socket = sock
             self.payload = payload
             self.id = id
             self.seq = seq
             self.destination = destination
+            self.sent = None
+
         def run(self):
-            self.packet = send_icmp_echo(self.socket, self.payload , self.id, self.seq, self.destination)
+            self.sent = send_icmp_echo(self.socket, self.payload , self.id, self.seq, self.destination)
+
 
     args = sys.argv
     if (len(args) < 2):
@@ -106,10 +120,10 @@ def main():
         thread2.start()
         thread1.join()
         thread2.join()
-        t = round(thread1.duration, 1)
-        total_time += thread1.duration
+        t = round(thread1.get_duration(), 1)
+        total_time += thread1.get_duration()
         print("destination = {}, icmp_seq = {}, icmp_id = {}, ttl = {}, rtt = {} ms"
-            .format(thread1.packet[1][0], i, id, ttl, t))
+            .format(thread1.get_packet()[1][0], i, id, ttl, t))
     avg_time = round((total_time/num), 3)
     print("Average rtt: " + str(avg_time))
     return 0
